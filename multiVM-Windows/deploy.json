@@ -1,0 +1,293 @@
+
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmDnsName": {
+      "type": "string",
+      "metadata": {
+        "description": "DNS  name for the VM"
+      }
+    },	
+    "numberOfInstances": {
+      "type": "int",
+      "defaultValue": 2,
+      "metadata": {
+        "description": "Number of VM instances to create, default is 2"
+      }
+    },
+      "dnsLabelPrefix": {  
+         "type":"string",
+         "metadata": {  
+            "description":"Unique DNS Name for the Public IP used to access the Virtual Machine."
+         }
+      },
+    "adminUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "Admin user name for the Virtual Machines"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Admin password for the Virtual Machines"
+      }
+    },
+    "imagePublisher": {
+      "type": "string",
+      "defaultValue": "Canonical",
+      "metadata": {
+        "description": " Publisher for the OS image, the default is Canonical"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "West US",
+      "metadata": {
+        "description": "Location for the VM, default is West US"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_A2",
+      "metadata": {
+        "description": "VM Size"
+      }
+    },
+    "chef_node_name": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique name for the node (VM) in the Chef Organization"
+      }
+    },
+    "chef_server_url": {
+      "type": "string",
+      "metadata": {
+        "description": "Organization URL for the Chef Server. Example https://ChefServerDnsName.cloudapp.net/organizations/Orgname"
+      }
+    },
+    "validation_client_name": {
+      "type": "string",
+      "metadata": {
+        "description": "Validator key name for the organization. Example : MyOrg-validator"
+      }
+    },
+    "runlist": {
+      "type": "string",
+      "defaultValue": "recipe[getting-started]",
+      "metadata": {
+        "description": "Optional Run List to Execute"
+      }
+    },
+    "autoUpdateClient": {
+      "type": "string",
+      "defaultValue": "false",
+      "metadata": {
+        "description": "Optional Flag for opting into auto updates"
+      }
+    },
+    "validation_key": {
+      "type": "string",
+      "metadata": {
+        "description": "JSON Escaped Validation Key"
+      }
+    },
+    "windowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "2016-Nano-Server",
+        "2016-Datacenter-with-Containers",
+        "2016-Datacenter"
+      ],
+      "metadata": {
+        "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+      }
+    }
+  },
+  "variables": {
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+    "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
+    "dataDisk1VhdName":"msysunamdefc",
+	  "OSDiskName":"msysammy",
+    "vmExtensionName": "WindowsChefExtension",
+    "storageAccountType": "Standard_LRS",
+	  "newStorageAccountName": "[concat(uniquestring(resourceGroup().id), 'chefwinvm')]",
+    "publicIPAddressName": "[parameters('vmDnsName')]",
+    "publicIPAddressType": "Dynamic",
+    "vmStorageAccountContainerName": "[parameters('dnsLabelPrefix')]",
+    "virtualNetworkName": "[parameters('dnsLabelPrefix')]",
+    "addressPrefix": "10.0.0.0/16",
+    "subnet1Name": "subnet-1",
+    "subnet2Name": "subnet-2",
+    "subnet1Prefix": "10.0.0.0/24",
+    "subnet2Prefix": "10.0.1.0/24",
+    "nicName": "[parameters('vmDnsName')]",
+    "dnsName": "[variables('subnet1Name')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('newStorageAccountName')]",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "[variables('storageAccountType')]"
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[concat(variables('publicIPAddressName'),copyIndex())]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "publicIPLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[concat(parameters('dnsLabelPrefix'), copyIndex())]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('virtualNetworkName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('addressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('subnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('subnet1Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('subnet2Name')]",
+            "properties": {
+              "addressPrefix": "[variables('subnet2Prefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('nicName'),copyIndex())]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "nicLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'),copyIndex())]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',concat(variables('publicIPAddressName'),copyIndex())	)]"
+              },
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(parameters('vmDnsName'),copyIndex())]",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Storage/storageAccounts/', variables('newStorageAccountName'))]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), copyIndex())]",
+        ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[concat(parameters('vmDnsName'),copyIndex())]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "[parameters('windowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {              "uri":"[concat('http://',variables('newStorageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',concat(parameters('vmDnsName'),copyIndex()),'.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+		
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName'), copyIndex()))]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vmDnsName'),copyIndex(),'/', variables('vmExtensionName'))]",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[parameters('location')]",
+      "copy": {
+        "name": "extensionLoop",
+        "count": "[parameters('numberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmDnsName'), copyIndex())]"
+      ],
+      "properties": {
+        "publisher": "Chef.Bootstrap.WindowsAzure",
+        "type": "ChefClient",
+        "typeHandlerVersion": "1210.12",
+        "settings": {
+          "bootstrap_options": {
+          "bootstrap_version": "12",
+            "chef_node_name": "[concat(parameters('chef_node_name'),copyIndex())]",
+            "chef_server_url": "[parameters('chef_server_url')]",
+            "validation_client_name": "[parameters('validation_client_name')]"
+          },
+          "runlist": "[parameters('runlist')]"
+        },
+        "protectedSettings": {
+          "validation_key": "[parameters('validation_key')]"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "value": "azure"
+    },
+    "adminPassword": {
+      "value": "AmmyAmmy@123"
+    },
+    "virtualMachineSize": {
+      "value": "Standard_DS2_v2"
+    },
+    "dnsLabelPrefix": {
+      "value": "ammy-swin-12"
+    },
+    "chef_node_name": {
+      "value": "ammy-swin-12"
+    },
+    "vm_name": {
+      "value": "ammy-swin-12"
+    },
+    "chef_server_url": {
+      "value": "https://api.chef.io/organizations/chef_msys"
+    },
+    "validation_client_name": {
+      "value": "chef_msys-validator"
+    },
+    "runlist": {
+     "value": "recipe[cbk1::rec1],recipe[getting-started]"
+    },
+    "validation_key": {
+     "value": "-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEA+H9TwdKhRbr2yG+5cU3h+B4kcC+ltckug3QO9A1W2PEBoMSz
+wKqcDF7dklw3vG6Zgc/hxzvfFt65ab9DGxPKxBZlAWoOEepa0qw0M0rvS7s/xnA1
+fGrVxiRwvI3m+L5wH9ndrDJ921cPu04iAPF9YdajrpZlJyRs8EdYdO1qDmr7ZcjV
+kVtleZVjILVrTjFgQHeL8oFmZA4I9YiMMz5uFWtdOIyZRxCIhoE6hGKt/s58QSWf
+upbm0OnVEJ82ede/OgdXNYOzQ8nFa3hZg85dDV498kZAa9pNcNysjQlN610iu02H
+Cfr9dexKTOfUMAn5iJWCmMAwdHBuVrRA+RzhYwIDAQABAoIBAH4oZmVogefc2502
+23bii25kHyu1hPOdh7fFHDJa81SARstQEdImy8KcBvFfUAyiOdzlpUJ46vG5cXh2
+WaNNkQusMutc5HfD+wgp1PaVfJd+IQqlvQHFW3KU3Ydco351cIc7HIdnuu24bYwy
+RqEj+PvK9J6WTBRrMcNq9UWnosheF9djgm6Rx/WJR0J0AcB3JZPCv0WSVxWmuRUG
+Qh/RRF+oqDBQCothniB5E0UfuauDNPhItka4PSI9kPbVc+VH8msKjKEe0P6xxGfd
+0Jhi2ZzhvGnMrdp/bfQTFl/QtxEosdQqIPLAHHXKu2/wppy2SiLvwnxssHpZuf9/
+QN4hDwECgYEA/oYF2lugmAk8CpLA0mYMXfDvZbIrDBf4dhL2lxd9V5Dn1QhtpmPk
+EArcI2CFESvo1Edz92NWTCz84aGpXW25G8uSARrFhTmnlaniK997WznD0myPw2bC
+BOG4vb+bSzSK479djKcgoatd1+W/Kd2R5E7c0Atut9hIn2RCWVR+kZECgYEA+fBa
+8Tjl5q5S2I57+2tOwdeP4b12cpxd2NeeZdPFu9ex8b6NqT5NVBbD5leb4gvbnofm
+W7YeCwR7XElNS0TnXassVjMHqHz4fbtKhpmmJnPsdeXKAN+RenOt+lolwXQJrro6
+yZkyQz9kBvjS7sonBrCBMj4qxyjJqPWTFEoPCbMCgYEA9dnvfWRUU4dX/76RkqoP
++A3qsIjRG/VrgmH+3yNJZ3QI+7YQdFC40uYqjeGFp3iKhcIfOi8yBJLQEgJd3mlG
+DJsuhPKfKHjwb5iRZ1+PgCbkCDXlCBISBzUhhee20YYHQsZuTpaA5qjpFMpPRNlJ
+OwcSM8NXRy4buBrYHAGJ4IECgYEAyaRhKmW2DPKtAeuKGR/MrVSEzyF0kyiWCiCC
+uTIuP8rX0+nhDh6mcmXfbFFYAPmCGJcZgPofqNHX2G+G/We8pXQ4095dmlAghgd5
+K7iANFun9MILw8Ka8sirHuRlu3oraZzzWrvOsjRNNda/DklnTN1PjkJbbsv4Tei5
+3U+WbEMCgYAR6qA9lTW45csOtrBsKGroRpTuyiOzBLTsTxG05BswlOaL7NloylpQ
+JN2rOiZuus2Ekjf851r5AF6QOfsATbCqCQfu/arBbCcQvg4jr9o771bInSNMXpK4
+6ZHUdCsAPoYXq7DJ6JDGJmLaoq9KfeWPPBE3xyS7Yv3M1PshsGe1oQ==
+-----END RSA PRIVATE KEY-----"
+    },
+    "secret" : {
+      "value" : "abc123"
+    }
+  }
+}

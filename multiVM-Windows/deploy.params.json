@@ -1,0 +1,65 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUserName": {
+      "value": "azure"
+    },
+    "adminPassword": {
+      "value": "azure@123"
+    },
+    "vmDnsName": {
+      "value": "task-multi2"
+    },
+    "dnsLabelPrefix": {
+      "value": "taskmulti2"
+    },	
+    "numberOfInstances": {
+      "value": 2
+    },
+    "chef_node_name": {
+      "value": "task-multi2"
+    },
+    "chef_server_url": {
+      "value": "https://api.chef.io/organizations/chef_msys"
+    },
+    "validation_client_name": {
+      "value": "chef_msys-validator"
+    },
+    "runlist": {
+      "value": "recipe[getting-started]"
+    },
+    "autoUpdateClient": {
+      "value": "false"
+    },
+    "validation_key": {
+      "value": "-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA6AMdfzwaL/w2/jBrnmx1MrUqpZ7ulVUZ228ryR/Jn2r4VgFb
+t6kAfLzDsy6mlMrebr7/Q3AY9lnAPM+6cKd0UdT+79Ytq7gTXLdKImi1gi/063WG
+EQ0/pcYk0B4/oS6hbRTzhZd4mHv/MabsTNTv7iPS6aoKafbe1W+U0I+csdN/c7So
+e1W/Iw8ERmrOMTkDFitkqWgiix7EayNiQd0GnsIU/1n8yujYwEnp1Y1uGYsDTxW3
+y9sLvoxj+kWqUwMZPxn1ByMnHHVbeHyuCjpkFqvNafHX6cA1AiYNhjXIiDBQDQYV
+QnDJSOXE4QcBwzqD2OXEZG/WMJ5x5BqcNFokdQIDAQABAoIBAGFyXYNBNSaOYnKk
+1660kwz3NrBVbpPeKHwX12YkKcUBYsiMzX74RrIdfnzVzTWVd5NAOWqTvIhL7ggc
+n4wNaTetpF4LsSb8q3U3rrWBEStbBR2YQPUMgX0ZGgEnk0YZlceBEz86/XXeLrMm
+Dv2+Of/loAJwXuteuv0eXnyytPeitpH5o2TRi3Uldx7FuiYOIOZ6PKOiHZQzNY5R
+l07kcyn7ss3e4SlvqXQrn+DmXNymrYcciuH1HKlFp5MTqeph/f92IYi+oDHYZaNK
+AsWy7PThUbUpBqwnNaYpv5ozGtL+yGyMY36hLZd0EKH/T/0cNGhzqiyVQNs0F8h5
+5w3cWEkCgYEA+P9xirtz40j8UZDveHcqKeeuONaYqm1IIyGK+2aEwFUCI2m92Wfq
+WEJ6EVZpVJUsBUHc3RRLKc6xr5K8Q+mb0CbB2j0BnzkJ5EDARTv50QEmaS5eB6e1
+2bEVtdoKm9ABbBU4YwHl0hzd88ZExGFJI9zKNcFDHh8MwknFL3bdvRcCgYEA7olj
++IHEIenzCZJM1+oVCJH91vgBLWUgjRKxvUCIyM3vql3irkF8n9EAmO778XXncdei
+E/cLwbxYqPoUTNEfCYq8k2gC586n8OfeR8+YI9q0EtUBw2AZoS+zMV/YBT+Bk1cy
+ykZNgdChYe2dmMNtQmdbpiVwoo/lP87Ymby6mlMCgYEAokgR3yJG6FYUJLD6ch/w
+OfmGYgLy4vhwcH0XELyDPrrott3e3wfMAxPobM5NvdOvKgoAAZKNXkUZJ13SF8z0
+QRhRdYQXP4e0O7A736O0MJS4TQrsO78BVU0F4kymZ2CM3L2Dz3tYJrWrroqFHRxu
+x9HJdHlt3f7MmP/tZP7qi6cCgYBXJVyfopEMLtN60LdAPqXWjrelPM/5TLPatlS3
+JoeSjSIdJNW3AffMz2efd9gVvBSFU9lD4AKsken2Of8GnXPwYX5JgDtngul6Ksvb
+gm071B/rrWRKg6Z5a9rUlAZwzGXDdZz5pzuTzKvZAh2MfQFCvE4QYidHTLjdWe1q
+JTgrPwKBgGKhLk0ms6psREQdjuwn4LK754zzDFYYnJDgByRzKvQukebc8AVG9Vix
+UFkxUyrvQTGuNhBKwGfoIWhtBnqBuPH7+QXHc84eY0HV6ATmrSu6idnPIBnVMc86
+pa/yLB3Cr+NF34JJPGGU9rrqHYI6aHi9LZSVvFwmSWWAqmyTyLfx
+-----END RSA PRIVATE KEY-----"
+    }
+  }
+}
